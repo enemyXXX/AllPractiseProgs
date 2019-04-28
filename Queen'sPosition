@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+
+
+
+var size = prompt("Введите размер доски");;   // размер доски
+var queens = Array(size);
+
+
+for (var j = 0; j < size; j++) {     // прогон по колонкам
+	queens[j] = 0;
+}
+
+
+
+
+function Show() {
+  for (var i = 0; i < size; i++) {    // по строкам
+    for (var j = 0; j < size; j++) { // по колонкам
+      var ch = queens[j] === i ? "| * |" : "| 0 |";
+      document.write(ch);
+    }
+    document.write('<br>'); // переход на новую строку
+  }
+}
+
+
+
+
+
+
+
+var nSolutions = 0;  // число найденных решений
+
+function Solve(n) {
+if (n === undefined) n = 0; // вначале ферзей нет
+
+if (n >= size) {  // всех расставили
+if (nSolutions++ < 1) // подсчитываем число решений
+Show();   //вывод
+return;
+}
+
+for (var i = 0, j; i < size; i++) {   // прогон по строчкам сверху-вниз
+
+for (j = 0; j < n; j++)                        // перебираем уже поставленных ферзей
+if (queens[j] === i || Math.abs(queens[j] - i) === n - j)   // если они стоят на этой строке или находятся с новым на одной диагонали
+break;
+
+if (j === n) {  // если ни кто не бьет ферзя
+queens[n] = i; // ставим его туда
+Solve(n + 1);    // подбираем следующего
+}
+}
+}
+
+
+
+
+Solve();
+
+</script>
+</body>
+</html>
