@@ -1,0 +1,34 @@
+<!DOCTYPE html> 
+<html> 
+
+<body> 
+	<input type = "number" id = "input_number"> 
+	<button onclick = "isInteger()">Test</button>
+	<p id="SimpleNumb"></p> 
+
+	<script> 
+		function isInteger() { 
+			var num = +document.getElementById("input_number").value;
+
+			return !((num ^ 0) === num) ? alert("Вы ввели не целое число") :
+			(num > 1000) ? alert("Число больше 1000") :
+			(num > 0) ? SimpleNumbers(num) : alert("Число меньше нуля");
+		}
+
+		function SimpleNumbers(num) {
+
+			nextPrime:
+			for (var i = 2; i <= num; i++) {
+
+				for (var j = 2; j < i; j++) {
+					if (i % j == 0) continue nextPrime;
+				}
+
+				document.getElementById("SimpleNumb").innerHTML += i + ", ";
+			}
+		}
+		
+
+	</script>
+</body>
+</html>
