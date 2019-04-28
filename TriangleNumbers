@@ -1,0 +1,21 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<script> 
+var randomNumb = +prompt("Введите позицию, начиная с 1:"); 
+
+isTriangular(randomNumb); 
+
+function isTriangular(number) { 
+if (Math.sqrt(1 + 8 * number) % 1 == 0) { 
+alert("На данной позиции стоит 1"); 
+} 
+else { 
+alert("На данной позиции стоит 0"); 
+} 
+} 
+</script> 
+</head> 
+<body> 
+</body> 
+</html>
