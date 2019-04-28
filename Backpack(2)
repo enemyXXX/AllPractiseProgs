@@ -1,0 +1,119 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<script> 
+		function knapsack(itemsNumber, capacity, weights) { 
+			var finalResult; /*Содержит максимальный вес*/ 
+
+			if(itemsNumber < 0 || capacity === 0) { /*Если все элементы перебраны, или нет свободного места - возвращается 0*/ 
+				finalResult = 0; 
+			} else if(weights[itemsNumber] > capacity) { /*Если вес элемента больше чем оставшееся место - возвращаемся на шаг ранее*/ 
+				finalResult = knapsack(itemsNumber - 1, capacity, weights); 
+			} else { 
+				var dontPutInBackpack = knapsack(itemsNumber - 1, capacity, weights); /* суммарный вес предыдущих предметов*/ 
+				var buff = sum(); /*Проверяем заполненность рюкзака на данный момент*/ 
+				if ((weights[itemsNumber] + buff) <= maxWeight && !presentIds.includes(itemsNumber) && !UsellesIds.includes(itemsNumber)) { 
+					presentIds.push(itemsNumber); 
+					temp[temp.length] = weights[itemsNumber]; /*Если мы можем добавить в массив этот предмет так, чтобы вместимость позволяла - мы заносим*/ 
+				} 
+				if (number === 0 ) number = itemsNumber; /*number - переменная, показывающая на каком этапе была вызвана функция*/ 
+				var putInBackpack = weights[itemsNumber] + knapsack(itemsNumber - 1, capacity - weights[itemsNumber], weights); /*вес данного предмета + вес предыдущих*/ 
+
+				finalResult = Math.max(dontPutInBackpack, putInBackpack); /*сравниваем что ближе к максимальному весу*/ 
+				if (putInBackpack >= dontPutInBackpack) { 
+
+					if (putInBackpack > max) {
+
+					var tempSum = sum();
+					if (tempSum !== putInBackpack) {
+						if ( itemsNumber === number) {
+					UsellesIds.push(presentIds[1]); presentIds.pop(); temp.pop();
+					knapsack(itemsNumber, maxWeight, weights);
+					}
+					}
+					else
+					{	
+						max = putInBackpack; 
+						console.log("Максимальный вес теперь: ", max);  /*Если больше - выводим на экран*/
+						maxWeightBackpack = []; 
+						maxWeightBackpack[maxWeightBackpack.length] = temp; 
+						console.log("С такими предметами: ", maxWeightBackpack[maxWeightBackpack.length-1]); 
+						temp = []; 
+						presentIds = [];  /*Обнуляем временные массивы*/
+						number = 0; 
+						UsellesIds = [];
+					}
+				} 
+				else 
+				{ 
+					if (putInBackpack === max && (itemsNumber === number)) { 
+
+						var tempSum = sum();
+				if (tempSum !== putInBackpack) {
+					UsellesIds.push(presentIds[1]); presentIds.pop(); temp.pop();
+					knapsack(itemsNumber, maxWeight, weights);
+				}
+				else
+				{
+						maxWeightBackpack[maxWeightBackpack.length] = temp; 
+						console.log("Также масимальный вес с такими предметами:: ", maxWeightBackpack[maxWeightBackpack.length-1]); 
+						temp = []; 
+						presentIds = []; 
+						number = 0; 
+						UsellesIds = [];
+					}
+					} 
+				} 
+			} 
+			else { 
+				if (itemsNumber === number) { temp = []; number = 0; presentIds = []; UsellesIds = [];} /*Если эта функция больше не имеет вложенностей - обнуляем массив и переменную*/ 
+			} 
+		} 
+		return finalResult; /*Возвращаем максимальный вес*/ 
+
+	} 
+	function sum() /*Проверяем, стоит ли заносить число в массив*/ 
+	{ 
+		var summ = 0; 
+		for (var i = 0; i < temp.length; i++) { 
+			summ += temp[i]; 
+		} 
+		return summ; 
+	} 
+
+
+	function javascript_abort()
+{
+   throw new Error('This is not an error. This is just to abort javascript');
+}
+
+	var backpack = []; /*Создаём пустой массив */ 
+	var temp = []; /*Временный массив, который будет содержать временные вариации*/ 
+	var maxWeightBackpack = []; /*Массив, который будет содержать один, или несколько вариантов с максимальным весом*/ 
+	var presentIds = [];  /*Массив, содержащий номера уже добавленных элементов в массив temp*/
+	var UsellesIds = []; /*Массив, который необходим для отслеживания номером элементов, которые не подходят*/
+	var number = 0; /*Переменная, отслеживающая глубину вызова рекурсии*/ 
+	var maxWeight = +prompt("Введите размер рюкзака"); /*Максимальный размер рюкзака*/ 
+	var max = 0; /*Содержит масимальный размер рюкзака на данный момент*/ 
+	var itemsCount = +prompt("Введите количество предметов"); /*Количество предметов*/ 
+
+	for (var i = 0; i < itemsCount; i++) { 
+		var weightCheck = prompt("Введите размер " + +(i+1) + " элемента"); /*Заполняем предметами, предварительно исключая элементы больше вместимости*/ 
+		if (weightCheck <= maxWeight) { 
+			backpack[backpack.length] = +weightCheck; 
+		} 
+	} 
+	backpack.sort(function(a, b) { /*Сортируем массив по убыванию, для отсечения заведомо неподходящих вариаций*/ 
+		return b - a; 
+	}); 
+	console.log(backpack); 
+	var maxBackpackWeight = knapsack(backpack.length-1, maxWeight, backpack); /*Вызываем рекурсивную функцию с 3 параметрами на входе*/ 
+	console.log('Максимальный размер рюкзака: ', maxWeight); 
+	console.log('Максимальный вес: ', maxBackpackWeight); /*Выводим результат в консоль*/ 
+</script> 
+</head> 
+<body> 
+
+	<p id="Output"></p> 
+</body> 
+</html>
