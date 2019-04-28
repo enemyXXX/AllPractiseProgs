@@ -1,0 +1,33 @@
+<!DOCTYPE html> 
+<html> 
+
+<body> 
+<script> 
+function perm(xs) { 
+var ret = []; 
+
+for (var i = 0; i < xs.length; i++) { 
+var rest = perm(xs.slice(0, i).concat(xs.slice(i + 1))); 
+
+if(!rest.length) { 
+ret.push([xs[i]]) 
+} else { 
+for(var j = 0; j < rest.length; j++) { 
+ret.push([xs[i]].concat(rest[j])) 
+} 
+} 
+} 
+return ret; 
+} 
+var kol = prompt("Введите количество бегунов?"); 
+var array = []; 
+for (var i = 1; i < +kol + 1; i++) { 
+array.push(i); 
+} 
+console.log(perm(array).join("\n")); 
+</script> 
+
+
+</body> 
+
+</html>
