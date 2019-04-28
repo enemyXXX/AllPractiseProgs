@@ -1,0 +1,28 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<script> 
+		function getAllEls() { 
+			var arrAll = []; 
+
+			function getEls(el) { 
+				var chNodes, i;
+				arrAll.push(el.tagName); 
+				if (el.hasChildNodes()) { 
+					chNodes = el.childNodes; 
+					for (i = 0; i < chNodes.length; i++) {
+					getEls(chNodes[i]);
+				}
+			}
+		}
+
+		getEls(document.querySelector("p")); 
+		document.getElementById("demo").innerHTML = (arrAll.join('<br>'));
+	}
+</script> 
+</head> 
+<body onload="getAllEls()">
+	<p><strong><em><del><mark>Красивый текст</mark></del></em></strong></p>
+	<p id="demo"></p> 
+</body> 
+</html>
