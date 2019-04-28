@@ -1,0 +1,91 @@
+<!DOCTYPE html> 
+<html> 
+
+<body> 
+	<script> 
+		function Item (name, massa) { 
+			this.Name = name; 
+			this.Massa = massa; 
+		} 
+
+
+function Binary(dec,length) { // Преобразуем десятичное число в двоичное с нужным количеством бит 
+	var out = ""; 
+	while(length--) 
+		out += (dec > length ) & 1; 
+	return out;
+} 
+
+
+
+function MaxWeight(BinaryNumber) { // Находим наибольший вес, который можем положить в рюкзак 
+	var FullWeight = 0; 
+	for (var i = 0; i < +BinaryNumber.length; i++) { 
+		if (+BinaryNumber[i] == 1) { 
+			FullWeight += +backpack[i].Massa; 
+		} 
+	} 
+	if (FullWeight <= backpackMassa && FullWeight > max) { 
+		max = FullWeight; 
+	} 
+} 
+
+
+function MaxBackpack(BinaryNumber) {
+	var FullWeight = 0; 
+	temp.length = 0; 
+	for (var i = 0; i < +BinaryNumber.length; i++) {
+		if (+BinaryNumber[i] == 1) {
+			FullWeight += +backpack[i].Massa; 
+			temp.push(backpack[i].Name);
+		}
+	}
+	if (FullWeight == max) { // Если является наиболее подходящим - заносим в массив, иначе выходим с функции
+		backpackArray[backpackArray.length] = [];
+		for (var j = 0; j < temp.length; j++) {
+			backpackArray[backpackArray.length -1][j] = temp[j];
+		}
+	}
+} 
+
+var backpack = []; //(нет) 
+var backpackMassa = 50; //ограничение 
+var kol = prompt("Введите кол-во предметов"); 
+
+for (var i = 0; i < kol; i++) { 
+	backpack[i] = new Item( prompt('Введите название'), prompt('Введите вес') ); 
+} 
+
+var max = 0; 
+var temp = []; 
+var backpackArray = []; 
+
+var t0 = performance.now(); // До выполнения кода 
+for (var i = 1; i < Math.pow(2, +backpack.length); i++) { 
+	MaxWeight(Binary(i, backpack.length)); 
+} 
+
+alert("Максимальный вес:" + max); 
+for (var i = 1; i < Math.pow(2, +backpack.length); i++) { 
+	MaxBackpack(Binary(i, backpack.length)); 
+} 
+
+alert("Возможные варианты вещей, при котором вес максимальный:") 
+for (var i = 0; i < backpackArray.length; i++) { 
+	var text = ""; 
+	for (var j = 0; j < backpackArray[i].length; j++) { 
+		text += backpackArray[i][j] + ", "; 
+	} 
+	alert(i+1 + ") " + text); 
+} 
+
+var t1 = performance.now(); // После выполнения кода 
+console.log("Call to doSomething took " + (t1 - t0) + " milliseconds."); // Подсчёт времени выполнения кода 
+
+
+</script> 
+
+
+</body> 
+
+</html>
