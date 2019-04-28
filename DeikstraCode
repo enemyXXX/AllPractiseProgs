@@ -1,0 +1,63 @@
+<!DOCTYPE html> 
+<html> 
+
+<body> 
+	<p id="demo"></p> <!-- Вывод возможных вариаций --> 
+	<script> 
+
+		function bubbleSort(arr, first, last) { 
+			for (var i = 0, endI = last; i < endI; i++) { 
+				for (var j = first, endJ = endI - i; j < endJ; j++) { 
+					if (arr[j] > arr[j + 1]) { 
+						var swap = arr[j]; 
+						arr[j] = arr[j + 1]; 
+						arr[j + 1] = swap; 
+					} 
+				} 
+			} 
+			return arr; 
+		} 
+
+
+
+		var count = prompt("Введите количество элементов"); 
+		var array = [];
+		var flag;
+		var raz, min, tmp; 
+		for (var i = 0; i < count; i ++) { 
+			array[i] = +prompt("Введите " + (+i +1) + " элемент"); 
+		}
+
+		array = bubbleSort(array,0,array.length);
+		alert(array);
+
+		while(true) { 
+			document.getElementById("demo").innerHTML += array + "<br>" ; 
+			flag = false; 
+			for (var i = count - 2; i >= 0; i--) { 
+				if (array[i] < array[i+1]) { 
+					flag = true; 
+					break; 
+				}
+			} 
+			if (flag == false) { 
+				break; 
+			} 
+			raz = array[i+1]; 
+
+			for ( var j = i+1; j < count; j++) { 
+				if (((array[j] - array[i]) < raz) && (array[i] < array[j])) { 
+					min = j; 
+				} 
+			} 
+			tmp = array[i]; 
+			array[i]= array[min]; 
+			array [min] = tmp; 
+			bubbleSort(array, i+1, count - 1);
+		} 
+		alert (bubbleSort(array, 1, 3)); 
+	</script> 
+
+</body> 
+
+</html>
