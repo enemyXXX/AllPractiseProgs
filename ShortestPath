@@ -1,0 +1,145 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<script> 
+/* 
+* dijkstra.js 
+* 
+* Dijkstra's single source shortest path algorithm in JavaScript. 
+*/ 
+
+
+
+
+function shortestPath(edges, numVertices, startVertex) { /*edges - двумерный массив, numVertices - количество вершин, startVertex - начальная вершина*/ 
+startVertex = startVertex - 1; 
+var done = new Array(numVertices); /*Создаем новый массив булевых значений размерностью количества вершин (В нашем случае 9)*/ 
+done[startVertex] = true; /*Присваиваем элементу массива с номером начальной вершины true*/ 
+var pathLengths = new Array(numVertices); 
+var predecessors = new Array(numVertices); /*Создаем ещё 2 пустых массива*/ 
+for (var i = 0; i < numVertices; i++) { 
+pathLengths[i] = edges[startVertex][i]; /*Заносим в массив все значения для начальной вершины*/ 
+if (edges[startVertex][i] != Infinity) { /*Если этот путь существует*/ 
+predecessors[i] = startVertex; /*Тогда заносим во второй массив начальную вершину*/ 
+} 
+} 
+pathLengths[startVertex] = 0; /*Обнуляем в массиве начальную вершину*/ 
+for (var i = 0; i < numVertices - 1; i++) { 
+var closest = -1; 
+var closestDistance = Infinity; 
+for (var j = 0; j < numVertices; j++) { 
+if (!done[j] && pathLengths[j] < closestDistance) { 
+closestDistance = pathLengths[j]; 
+closest = j; 
+} 
+} 
+done[closest] = true; 
+for (var j = 0; j < numVertices; j++) { 
+if (!done[j]) { 
+var possiblyCloserDistance = pathLengths[closest] + edges[closest][j]; 
+if (possiblyCloserDistance < pathLengths[j]) { 
+pathLengths[j] = possiblyCloserDistance; 
+predecessors[j] = closest; 
+} 
+} 
+} 
+} /*В цикле выполняем следующие шаги : На каждом шаге посещаем одну вершину и пытаемся уменьшить минимальное известное расстояние до этой вершины. Заканчиваем выполнение цикла когда все вершины посещены*/ 
+
+return { "startVertex": startVertex, 
+"pathLengths": pathLengths, 
+"predecessors": predecessors }; /*Возвращаем объект с 3 свойствами: Начальную вершину и 2 массива с минимальными растояниями*/ 
+} 
+
+function constructPath(shortestPathInfo, endVertex) { /*Строим минимальный путь, используя полученные массивы и конченую вершину*/ 
+var path = []; 
+endVertex = endVertex - 1; 
+while (endVertex != shortestPathInfo.startVertex) { 
+path.unshift(points[endVertex]); 
+endVertex = shortestPathInfo.predecessors[endVertex]; 
+} 
+path.unshift(points[shortestPathInfo.startVertex]); 
+return path; 
+} 
+
+
+var _ = Infinity; /*Везде где нет пути - присваиваем бесконечность, заранее обозначив её "_"*/ 
+var e = [ 
+[ _ , 2.8 , _ , _ , _ , 3.9 , 3.7 , _ , _ ], 
+[ 2.8 , _ , 3.4 , _ , _ , _ , _ , _ , _ ], 
+[ _ , 3.4 , _ , 4 , 4.6 , _ , _ , 5 , _ ], 
+[ _ , _ , 4 , _ , _ , _ , _ , _ , 4.5 ], 
+[ _ , _ , 4.6 , _ , _ , 3.3 , _ , _ , 1.8 ], 
+[ 3.9 , _ , _ , _ , 3.3 , _ , _ , 3.6 , _ ], 
+[ 3.7 , _ , _ , _ , _ , _ , _ , 2.1 , 0.1 ], 
+[ _ , _ , 5 , _ , _ , 3.6 , 2.1 , _ , 2.2 ], 
+[ _ , _ , _ , 4.5 , 1.8 , _ , 0.1 , 2.2 , _ ] /*Заполняем двумерный массив значениями*/ 
+]; 
+
+function shortestWay(sp, ep, path, m) { 
+if (sp == ep) { 
+calc(minPath,path) 
+path.pop(); 
+} 
+else { 
+
+for ( var i = 0; i < m.length; i++) { 
+if (m[sp][i] != Infinity && !path.includes(i)) { 
+path.push(i); 
+shortestWay(i, ep, path, m); 
+} 
+} 
+path.pop(); 
+} 
+} 
+function calc(minLength, thisPath){ 
+var pathLength = 0; 
+for ( var i = 0; i < thisPath.length-1; i++) { 
+pathLength += e[thisPath[i]][thisPath[i+1]]; 
+} 
+if (pathLength <= minPath) { 
+MinPath = []; 
+for ( var i = 0; i < thisPath.length; i ++) { 
+MinPath.push(thisPath[i]); 
+} 
+minPath = pathLength;} 
+} 
+function finalPath(fPath, emptyMass) { 
+for (var i = 0; i < fPath.length; i++) { 
+emptyMass.push(points[fPath[i]]); 
+} 
+} 
+
+
+var points = ["Янки-Купалы", "Южная", "Румлевский мост", "Богуцкого", "Горького", "Поповический мост", "Советский мост", "Дом науки и техники", "Мостовая"]; 
+for (var i = 0; i < points.length; i++) { 
+console.log(+i+1, points[i] ); 
+} 
+var startPoint = 1; 
+var endPoint = 8; 
+var minPath = 10000; 
+MinPath = []; 
+tempPath = [];
+tempPath.push(startPoint-1); 
+console.log("Используем алгоритм Дейкстры без рекурсии с " + points[startPoint-1] + " до " + points[endPoint-1] ); 
+/*Находим кратчайший путь до каждой вершины с вершины #*/ 
+var t0 = performance.now(); // До выполнения кода 
+var shortestPathInfo = shortestPath(e, e.length, startPoint); 
+/*Получаем кратчайший путь с вершины # до вершины №*/ 
+var Path = constructPath(shortestPathInfo, endPoint); 
+var t1 = performance.now(); // После выполнения кода 
+console.log("Время выполнения функции " + (t1 - t0) + " milliseconds."); // Подсчёт времени выполнения кода 
+console.log("Маршрут:") 
+console.log(Path); 
+console.log("Используем алгоритм поиска кратчайшего пути с рекурсией с " + points[startPoint-1] + " до " + points[endPoint-1] ); 
+var t0 = performance.now(); // До выполнения кода 
+shortestWay(startPoint-1, endPoint-1, tempPath, e); 
+finalPath(MinPath,tempPath); 
+console.log(tempPath); 
+var t1 = performance.now(); // После выполнения кода 
+console.log("Время выполнения функции " + (t1 - t0) + " milliseconds."); // Подсчёт времени выполнения кода 
+console.log("Длина пути: " + shortestPathInfo.pathLengths[endPoint-1].toFixed(2) + "км."); 
+</script> 
+</head> 
+<body> 
+</body> 
+</html>
