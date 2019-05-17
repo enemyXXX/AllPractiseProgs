@@ -1,0 +1,16 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<script> 
+
+for ( var i = 1; i < 50; i++) 
+document.write(f(i)); 
+
+function f(number) { 
+return ~~!Math.sign((number & (number - 1))); 
+} 
+</script> 
+</head> 
+<body> 
+</body> 
+</html>
