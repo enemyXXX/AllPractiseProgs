@@ -1,0 +1,21 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<script> 
+var randomNumb = +prompt("Введите позицию, начиная с 1:"); 
+
+alert(f(randomNumb)); 
+
+function a(numb){ 
+
+return (-3 + Math.sqrt(9 + 8*numb)) / 2; 
+} 
+
+function f(number) { 
+return 1 - Math.sign(a(number) % 1); 
+} 
+</script> 
+</head> 
+<body> 
+</body> 
+</html>
