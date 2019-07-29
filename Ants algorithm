@@ -1,0 +1,440 @@
+// INDEX.HTML
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
+    <script src="boid.js"></script>
+    <script src="sketch.js"></script>
+  </head>
+  <body>
+  </body>
+</html>
+
+// CLOSE INDEX.HTML
+
+// ANTS.JS
+
+class Ant {
+  constructor() { /*Конструктор объектов*/
+    this.position = createVector(420,800);  /*задаём положение на холсте*/
+    this.velocity = createVector(0,0);/*Свойство, отвечающее за направление движения объекта*/
+    this.pos = createVector(0,0);
+    this.isValue = false;
+    this.needPos = createVector(320,600)
+    this.startPosition = 0;
+    this.previousMarks = [0];
+    this.speed = 100;
+    var stPos = 0;
+    this.direction = false;
+    var pathLength = 0;
+    var pth = [];
+    this.array = [];
+  }
+
+  checkPos() {
+    if (this.isValue == false) {
+      if (this.direction == true) {var temp = this.previousMarks.pop(); this.array.push(temp);
+      }
+      var values = nextMark(this.startPosition,this.previousMarks, this.direction, this.position)
+      this.needPos = values.first;
+      this.startPosition = values.second;
+      this.direction = values.third; 
+      this.previousMarks = values.fourth;
+      if (!this.previousMarks.includes(values.second))
+      this.previousMarks.push(values.second);
+      if (this.startPosition == 10) {
+        this.pth = []; this.pth = this.previousMarks; this.pathLength = 0;
+       var vlues =  addPath(this.pth,this.pathLength);
+        this.pth = vlues.first;
+        this.pathLength = vlues.second;
+        this.previousMarks.pop();
+        this.array = [10];
+      }
+      if (this.startPosition == 0) {
+        this.direction = false;
+        updatePheromons(this.array);
+        console.log(pheromons);
+        this.previousMarks = [0];
+      }
+      this.speed = cohesionSlider.value();
+      var posX = this.position.x; var posY = this.position.y;
+      var tempX = (this.needPos.x - posX) / this.speed;
+      var tempY = (this.needPos.y - posY) / this.speed;
+      this.pos.x = tempX; this.pos.y = tempY;
+      this.isValue = true;
+    }
+
+  }
+
+  show() {  /*Отображение объекта*/
+    strokeWeight(8);  /*Радиус объекта*/
+    stroke('green');  /*Цвет объекта*/
+    if (Math.round(this.position.x) !== Math.round(this.needPos.x)) {
+    this.position.add(this.pos);
+    point(this.position.x, this.position.y);
+  }
+  else {
+    point(this.needPos.x, this.needPos.y);
+    this.isValue = false;
+  }
+  /*Расположение объекта*/
+  }
+}
+
+
+class CheckPoints {
+
+ show() {
+    strokeWeight(3); 
+    stroke(255);
+    //stroke(50, 55, (90 + 10* pheromons[10][9]));
+        strokeWeight(calcStrokeWeight(10,9));
+    line(360,60,280,160);
+    //stroke(50, 55, (90 + 10* pheromons[10][8]));
+        strokeWeight(calcStrokeWeight(10,8));
+    line(360,60,500, 220);
+    //stroke(50, 55, (90 + 10* pheromons[8][4]));
+        strokeWeight(calcStrokeWeight(8,4));
+    line(500, 220,560, 480);
+   // stroke(50, 55, (90 + 10* pheromons[4][1]));
+       strokeWeight(calcStrokeWeight(4,1));
+    line(560, 480,540, 700);
+    //stroke(50, 55, (90 + 10* pheromons[1][0]));
+        strokeWeight(calcStrokeWeight(1,0));
+    line(540, 700,420, 800);
+    //stroke(50, 55, (90 + 10* pheromons[8][6]));
+        strokeWeight(calcStrokeWeight(8,6));
+    line(500, 220,400,380);
+    //stroke(50, 55, (90 + 10* pheromons[6][7]));
+        strokeWeight(calcStrokeWeight(6,7));
+    line(400,380,380, 300);
+    //stroke(50, 55, (90 + 10* pheromons[7][9]));
+        strokeWeight(calcStrokeWeight(7,9));
+    line(380, 300,280,160);
+    //stroke(50, 55, (90 + 10* pheromons[6][9]));
+        strokeWeight(calcStrokeWeight(6,5));
+    line(400,380,260, 440);
+    //stroke(50, 55, (90 + 10* pheromons[7][5]));
+        strokeWeight(calcStrokeWeight(7,5));
+    line(380, 300,260, 440);
+    //stroke(50, 55, (90 + 10* pheromons[7][3]));
+        strokeWeight(calcStrokeWeight(6,3));
+    line(400,380,420, 480);
+    //stroke(50, 55, (90 + 10* pheromons[3][1]));
+        strokeWeight(calcStrokeWeight(3,1));
+    line(420, 480,540, 700);
+    //stroke(50, 55, (90 + 10* pheromons[2][0]));
+        strokeWeight(calcStrokeWeight(2,0));
+    line(320, 600,420, 800);
+    //stroke(50, 55, (90 + 10* pheromons[2][5]));
+        strokeWeight(calcStrokeWeight(2,5));
+    line(320, 600,260, 440);
+    //stroke(50, 55, (90 + 10* pheromons[2][3]));
+        strokeWeight(calcStrokeWeight(2,3));
+    line(320, 600,420, 480);
+    //stroke(50, 55, (90 + 10* pheromons[4][6]));
+        strokeWeight(calcStrokeWeight(4,6));
+    line(560, 480,400,380)
+  }
+}
+
+function calcStrokeWeight(x,y) {
+
+  var z = 0;
+
+  if (pheromons[x][y] < 9) { 
+      z = pheromons[x][y]; 
+  }  else {
+    z = 9;
+  }
+  stroke(255 - 25*z);
+
+  return z; 
+
+
+
+}
+
+
+class ShowPoints {
+  show() {
+     strokeWeight(12);
+        stroke('red');
+    point(360, 60); point(500, 220); point(380, 300); point(360, 60); point(260, 440); point(540, 700);
+    point(280, 160); point(400, 380); point(560, 480); point(420, 480); point(320, 600); point(420, 800);
+  }
+}
+
+
+function addPath(realPath, lngth) {
+  for (var i = 0; i < realPath.length-1; i++) {
+    lngth+=path[realPath[i]][realPath[i+1]];
+  }
+
+  return {
+        first: realPath,
+        second: lngth,
+    };
+
+}
+
+function updatePheromons(realPath) {
+
+    realPath.push(0);
+   var p = 0; // Забывчивость
+   for (var i = 0; i < realPath.length-1; i++) {
+    pheromons[realPath[i]][realPath[i+1]] = pheromons[realPath[i+1]][realPath[i]] = (1 - p) * pheromons[realPath[i]][realPath[i+1]] + (1/path[realPath[i]][realPath[i+1]]);
+  }
+
+}
+
+var path = [ 
+[ 0 , 30 , 50 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
+[ 30 , 0 , 0 , 50 , 40 , 0 , 0 , 0 , 0 , 0 , 0 ], 
+[ 50 , 0 , 0 , 30 , 0 , 38 , 0 , 0 , 0 , 0 , 0 ], 
+[ 0 , 50 , 30 , 0 , 0 , 0 , 24 , 0 , 0 , 0 , 0 ], 
+[ 0 , 40 , 0 , 0 , 0 , 0 , 40 , 0 , 50 , 0 , 0 ], 
+[ 0 , 0 , 38 , 0 , 0 , 0 , 30 , 39 , 0 , 0 , 0 ], 
+[ 0 , 0 , 0 , 24 , 40 , 30 , 0 , 16 , 38 , 0 , 0 ], 
+[ 0 , 0 , 0 , 0 , 0 , 39 , 16 , 0 , 0 , 40 , 0 ], 
+[ 0 , 0 , 0 , 0 , 50 , 0 , 38 , 0 , 0 , 0 , 45 ], 
+[ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 40 , 0 , 0 , 30 ],
+[ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 45 , 30 , 0 ]
+];
+
+var pheromons = [ 
+[ 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
+[ 1 , 0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0 , 0 ], 
+[ 1 , 0 , 0 , 1 , 0 , 1 , 0 , 0 , 0 , 0 , 0 ], 
+[ 0 , 1 , 1 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 ], 
+[ 0 , 1 , 0 , 0 , 0 , 0 , 1 , 0 , 1 , 0 , 0 ], 
+[ 0 , 0 , 1 , 0 , 0 , 0 , 1 , 1 , 0 , 0 , 0 ], 
+[ 0 , 0 , 0 , 1 , 1 , 1 , 0 , 1 , 1 , 0 , 0 ], 
+[ 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0 , 0 , 1 , 0 ], 
+[ 0 , 0 , 0 , 0 , 1 , 0 , 1 , 0 , 0 , 0 , 1 ], 
+[ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 1 ],
+[ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0 ]
+];
+
+
+function nextMark(startPos, prevMarks, directions, pos){
+  if (startPos == 0) directions = false;
+  if (startPos == 10) directions = true;
+  var NextTurn;
+  var TempTurn = createVector(0,0);
+  var allVariables = [];
+  var allChances = [];
+  var afterDiv = 0;
+
+  if (directions == false) {
+  for (var i = 0; i < path.length; i++) {
+      if (path[startPos][i] !== 0) {
+        if (!prevMarks.includes(i)) {
+             switch (i) {
+
+    case 0:
+   TempTurn = createVector(420, 800);
+    break;
+  case 1:
+   TempTurn = createVector(540,700);
+    break;
+  case 2:
+   TempTurn = createVector(320,600);
+    break;
+     case 3:
+   TempTurn = createVector(420, 480);
+    break;
+  case 4:
+   TempTurn = createVector(560, 480);
+    break;
+  case 5:
+   TempTurn = createVector(260, 440);
+    break;
+      case 6:
+   TempTurn = createVector(400, 380);
+    break;
+  case 7:
+   TempTurn = createVector(380, 300);
+    break;
+     case 8:
+   TempTurn = createVector(500, 220);
+    break;
+  case 9:
+   TempTurn = createVector(280, 160);
+    break;
+  case 10:
+   TempTurn = createVector(360, 60);
+    break;
+}
+          if (directions == false && TempTurn.y < pos.y) {
+            allVariables.push(i);
+          }
+
+
+          if (directions == true && pos.y < TempTurn.y) {
+            allVariables.push(i);
+          }
+
+        }
+      }
+  }
+  allVariables.forEach(function(element) {
+
+    afterDiv += 1/path[startPos][element] * pheromons[startPos][element];
+      
+});
+
+  allVariables.forEach(function(element) {
+
+    allChances.push(((1/path[startPos][element]) * pheromons[startPos][element])/afterDiv);
+      
+});
+  var MaxChance = getMaxOfArray(allChances);
+
+  if (MaxChance > 0.75) {
+  var NextPos = allVariables[allChances.indexOf(MaxChance)];
+}
+else {
+  var rnd = Math.round(random(0, allVariables.length-1));
+  var NextPos = allVariables[rnd];
+}
+
+  switch (NextPos) {
+    case 0:
+   NextTurn = createVector(420, 800);
+    break;
+  case 1:
+   NextTurn = createVector(540,700);
+    break;
+  case 2:
+   NextTurn = createVector(320,600);
+    break;
+     case 3:
+   NextTurn = createVector(420, 480);
+    break;
+  case 4:
+   NextTurn = createVector(560, 480);
+    break;
+  case 5:
+   NextTurn = createVector(260, 440);
+    break;
+      case 6:
+   NextTurn = createVector(400, 380);
+    break;
+  case 7:
+   NextTurn = createVector(380, 300);
+    break;
+     case 8:
+   NextTurn = createVector(500, 220);
+    break;
+  case 9:
+   NextTurn = createVector(280, 160);
+    break;
+  case 10:
+   NextTurn = createVector(360, 60);
+    break;
+}
+}
+else {
+  var NextPos = prevMarks[prevMarks.length-1];
+      prevMarks.pop();
+  switch (NextPos) {
+    case 0:
+   NextTurn = createVector(420, 800);
+    break;
+  case 1:
+   NextTurn = createVector(540,700);
+    break;
+  case 2:
+   NextTurn = createVector(320,600);
+    break;
+     case 3:
+   NextTurn = createVector(420, 480);
+    break;
+  case 4:
+   NextTurn = createVector(560, 480);
+    break;
+  case 5:
+   NextTurn = createVector(260, 440);
+    break;
+      case 6:
+   NextTurn = createVector(400, 380);
+    break;
+  case 7:
+   NextTurn = createVector(380, 300);
+    break;
+     case 8:
+   NextTurn = createVector(500, 220);
+    break;
+  case 9:
+   NextTurn = createVector(280, 160);
+    break;
+  case 10:
+   NextTurn = createVector(360, 60);
+    break;
+}
+}
+
+  
+
+   return {
+        first: NextTurn,
+        second: NextPos,
+        third: directions,
+        fourth: prevMarks,
+    };
+}
+
+function getMaxOfArray(numArray) {
+  return Math.max.apply(null, numArray);
+}
+
+// CLOSE ANTS.JS
+
+
+
+// SKETCH.JS
+
+const ants = []; 	/*Хранит все объекты*/
+const checkpointss = [];
+const points = [];
+var cohesionSlider; /*Слайдер, который передает значение сплоченности объектов*/
+
+function setup() {	/*Встроенная функция в библиотеку p5.js. Функция для создания слайдера и холста*/
+  createCanvas(800, 850);	/*Создаём холст для отрисовки объектов*/
+   cohesionSlider = createSlider(40, 300, 100, 20); /*Создаём слайдер для управления сплоченностью*/
+  for (var i = 0; i < 1; i++) {
+   // ants.push(new Ant());	/*Создаём экземляры объектов*/
+  }
+  checkpointss.push(new CheckPoints());
+  points.push(new ShowPoints());
+}
+
+function printNumbersInterval() {
+  var i = 1;
+  var timerId = setInterval(function() {
+     ants.push(new Ant());  /*Создаём экземляры объектов*/
+    if (i == 50) clearInterval(timerId);
+    i++;
+  }, 300);
+}
+
+// вызов
+printNumbersInterval();
+
+
+function draw() {	/*Встроенная функция в библиотеку p5.js. Вызывается непрерывно в цикле ( 60 раз в секунду )*/
+  background('pink');	/*Заливаем задний фон холста черным цветом*/
+  checkpointss[0].show();
+  points[0].show();
+  for (var ant of ants) {	
+    ant.checkPos();
+    ant.show();	/*Вызываем функцию для перерисовки объекта*/
+  }
+}
+
+
+// CLOSE SKETCH.JS
